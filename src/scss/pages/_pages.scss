@@ -1,71 +1,4 @@
-// variables
-
-$fs-regular: 16px;
-$colors: (
-  light: #FFFFFF,
-  dark: #000000,
-  link: #428bca,
-  linkHover: #555,
-);
-.my-class {
-  font-size: $fs-regular;
-  color: map-get($colors, link);
-}
-
-
-
-//- Nesting
-
-.showcase {
-  @include set-background($light-color);
-  min-height: 100vh;
-  nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    ul {
-      display: flex;
-      list-style-type: none;
-      li{
-        padding: 15px;
-        a {
-          color: set-text-color($primary-color);
-          &:hover {
-            color: $secondary-color;
-          }
-        }
-      }
-    }
-  }
-  &-content {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 30px;
-    img {
-      width: 50%;
-    }
-    h1 {
-      font-size: 50px;
-      line-height: 1.2;
-    }
-    #{&}-paragraph {
-      font-size: $fs-regular;
-    }
-  }
-}
-
-.funky {
-  font: {
-    family: fantasy;
-    size: 30em;
-    weight: bold;
-  }
-}
-
-
-//- Extending and mixin
+//- Mixins Basic mixin
 
 @mixin btn {
   display: inline-block;
@@ -77,35 +10,123 @@ $colors: (
   }
 }
 
-%btn {
-  display: inline-block;
-  border-radius: 5px;
-  padding: 8px 20px;
-  margin: 3px;
-  &:hover {
-    transform: scale(.98);
-  }
-}
-
 .btn-primary {
-  @extend %btn;
-  //@include btn;
+  @include btn;
   @include set-background(lighten($primary-color, 10%));
 }
 
 .btn-secondary {
-  @extend %btn;
-  //@include btn;
+  @include btn;
   @include set-background($secondary-color);
 }
 
+@mixin overlay() {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
 
-// _utilities.scss
-.container {
-  max-width: 1100px;
-  padding: 0 30px;
-  margin: 0 auto;
-  overflow: auto;
+.modal-blue {
+  @include overlay;
+  @include set-background(#c0e1e6);
 }
 
 
+
+// Including mixins within mixins
+
+@mixin list-reset {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@mixin list-x {
+  @include list-reset;
+  li {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+}
+
+ul {
+  @include list-x;
+}
+
+
+
+
+// Mixins with parameters
+
+@mixin border-solid($width, $color) {
+  border: $width solid $color;
+}
+.nav-1 {
+  @include border-solid(2px, #000);
+}
+
+@mixin border-solid-def($width: 2px, $color: #ccc) {
+  border: $width solid $color;
+}
+.nav-2 {
+  @include border-solid-def();
+}
+
+.nav-3 {
+  @include border-solid-def(1px, black);
+}
+
+
+
+// Passing Content to Mixins
+
+@mixin media($width) {
+  @media only screen and (max-width: $width) {
+    @content;
+  }
+}
+.container {
+  width: 500px;
+  @include media(320px) {
+    background: red;
+    width: 100%;
+  }
+}
+
+
+@mixin test-content($color) {
+  .test {
+    color: $color;
+    @content;
+  }
+}
+
+@include test-content(blue) {
+  background-color: red;
+}
+
+
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} {
+    @content;
+  }
+
+  @-moz-keyframes #{$name} {
+    @content;
+  }
+
+  @keyframes #{$name} {
+    @content;
+  }
+}
+
+@include keyframes(fadeIn) {
+  from {
+    opacity: 0%;
+  }
+  to {
+    opacity: 100%;
+  }
+}
