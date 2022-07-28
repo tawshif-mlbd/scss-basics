@@ -1,0 +1,76 @@
+// Functions
+
+// Set text color based on bg
+@function set-text-color($color) {
+  @if(lightness($color) > 70) {
+    @return #333;
+  } @else {
+    @return #fff;
+  }
+}
+
+
+// Set background & text color
+@mixin set-background($color) {
+  background-color: $color;
+  color: set-text-color($color)
+}
+
+
+$light: 1px solid black;
+$medium: 3px solid black;
+$heavy: 6px solid black;
+$none: none;
+
+@mixin border-stroke($val) {
+  @if $val == light
+  {
+    border: $light;
+  }
+  @else if $val == medium
+  {
+    border: $medium;
+  }
+  @else if $val == heavy
+  {
+    border: $heavy;
+  }
+  @else
+  {
+    border: $none;
+  }
+}
+
+#box {
+  width: 150px;
+  height: 150px;
+  background-color: red;
+  @include border-stroke(heavy);
+}
+
+
+// Margin & padding classes
+
+//$spaceamounts: (1,2,3,4,5);
+
+//@each $space in $spaceamounts {
+//  .m-#{$space} {
+//    margin: #{$space}rem;
+//  }
+//  .my-#{$space} {
+//    margin: #{$space}rem 0;
+//  }
+//
+//  .p-#{$space} {
+//    padding: #{$space}rem;
+//  }
+//  .py-#{$space} {
+//    padding: #{$space}rem 0;
+//  }
+//}
+
+//@for $i from 1 through 4 {
+//  .m-#{$i} {
+//    margin: #{$i}rem;
+//  }
+//}
